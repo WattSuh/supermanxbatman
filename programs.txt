@@ -1,1 +1,111 @@
-checking if this works
+PROGRAM 1(A):
+void setup() {
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(9, HIGH);
+  delay(1000);
+  digitalWrite(9, LOW);
+  delay(1000);
+}
+
+PROGRAM 1(B):
+void setup() {
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(10, HIGH);
+  delay(1000);
+  digitalWrite(10, LOW);
+  delay(1000);
+  digitalWrite(11, HIGH);
+  delay(1000);
+  digitalWrite(11, LOW);
+  delay(1000);
+}
+
+PROGRAM 2:
+int ledpin = 12;
+int switchpin = 2;
+int val = 0;
+void setup() {
+  pinMode(ledpin, OUTPUT);
+  pinMode(switchpin, INPUT);
+}
+
+void loop() {
+  val = digitalRead(switchpin);
+  if(val == HIGH){
+    digitalWrite(ledpin, HIGH);
+  }else{
+    digitalWrite(ledpin, LOW);
+  }
+}
+
+PROGRAM 3:
+int trigpin = 9;
+int echopin = 8;
+int ledpin = 3;
+int distance_threshold = 40;
+float duration_us, distance_cm;
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigpin, OUTPUT);
+  pinMode(echopin, INPUT);
+  pinMode(ledpin, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(trigpin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigpin, LOW);
+  duration_us = pulseIn(echopin, HIGH);
+  distance_cm = 0.017 * duration_us;
+  if(distance_cm < distance_threshold){
+    digitalWrite(ledpin, HIGH);
+  }else{
+    digitalWrite(ledpin, LOW);
+  }
+  Serial.print("distance: ");
+  Serial.print(distance_cm);
+  Serial.println(" cm");
+  delay(500);
+}
+
+
+PROGRAM 4:
+#include"DHT.h"
+#include<LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+void setup(){
+}
+void loop(){
+  float humi = dht.readHumidity(0);
+  float tempC = dht.readTemperature();
+  Serial.print("humidity: ");
+  Serial.print(humi);
+  Serial.print("%");
+  Serial.print("    |   ");
+  Serial.print("temperature: ");
+  Serial.print(tempC);
+  Serial.print("   .C");
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("humi: ");
+  lcd.print(humi);
+  lcd.print("%");
+  Serial.begin(9600);
+  dht.begin();
+  lcd.setCursor(0, 1);
+  lcd.print("Temp: ");
+  lcd.print(tempC);
+  lcd.print("    .C");
+  delay(500);
+}
